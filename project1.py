@@ -308,8 +308,8 @@ def classifier_accuracy(
     theta, theta_0 = classifier(train_feature_matrix, train_labels, **kwargs)
     train_predict_labels = classify(train_feature_matrix, theta, theta_0)
     val_predict_labels = classify(val_feature_matrix, theta, theta_0)
-    train_accuracy = np.mean(train_labels == train_predict_labels)
-    val_accuracy = np.mean(val_labels == val_predict_labels)
+    train_accuracy = accuracy(train_predict_labels, train_labels)
+    val_accuracy = accuracy(val_predict_labels, val_labels)
     return (train_accuracy, val_accuracy)
 #pragma: coderesponse end
 
@@ -339,10 +339,11 @@ def bag_of_words(texts):
     """
     # Your code here
     dictionary = {} # maps word to unique index
+    remove = {"he":1, "is":2, "on":3, "the":4, "there":5, "to":6}
     for text in texts:
         word_list = extract_words(text)
         for word in word_list:
-            if word not in dictionary:
+            if word not in dictionary and word not in remove:
                 dictionary[word] = len(dictionary)
     return dictionary
 #pragma: coderesponse end
@@ -368,7 +369,7 @@ def extract_bow_feature_vectors(reviews, dictionary):
         word_list = extract_words(text)
         for word in word_list:
             if word in dictionary:
-                feature_matrix[i, dictionary[word]] = 1
+                feature_matrix[i, dictionary[word]] += 1
     return feature_matrix
 #pragma: coderesponse end
 
